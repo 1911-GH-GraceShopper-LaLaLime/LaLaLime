@@ -25,19 +25,15 @@ class Cart extends React.Component {
         <div className="cart-page">
           <div className="cart-list">
             <h2>Shopping cart</h2>
-            {this.props.cartItems ? (
-              this.props.cartItems.map(item => {
-                return (
-                  <CartItem
-                    key={item.productId}
-                    item={item}
-                    userId={this.props.userId}
-                  />
-                )
-              })
-            ) : (
-              <div>No items in cart!</div>
-            )}
+            {this.props.cartItems.map(item => {
+              return (
+                <CartItem
+                  key={item.productId}
+                  item={item}
+                  userId={this.props.userId}
+                />
+              )
+            })}
           </div>
           <div className="cart-order-summary">
             <div className="cart-line-items">

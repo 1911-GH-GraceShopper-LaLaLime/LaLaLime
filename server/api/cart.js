@@ -5,7 +5,9 @@ module.exports = router
 router.get('/:userId', async (req, res, next) => {
   try {
     console.log('req.params', req.params.userId)
+    //Check if user is logged in
     if (req.session.passport) {
+      //Check if user is attempting to view their own cart
       if (req.session.passport.user == req.params.userId) {
         const cart = await Order.findOne({
           where: {
@@ -13,6 +15,7 @@ router.get('/:userId', async (req, res, next) => {
             status: 'pending'
           }
         })
+        //check if an order was found
         if (cart) {
           const orderId = cart.id
           const productList = await ProductOrder.findAll({
@@ -23,9 +26,11 @@ router.get('/:userId', async (req, res, next) => {
           })
           res.json(productList)
         } else {
+          //if not, send string
           res.status(200).send('No items in cart yet!')
         }
       } else {
+        //if not authorized, send string
         res.status(200).send('Not your cart!')
       }
     } else {
