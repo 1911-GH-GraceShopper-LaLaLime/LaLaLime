@@ -4,7 +4,6 @@ module.exports = router
 
 router.get('/:userId', async (req, res, next) => {
   try {
-    console.log('req.params', req.params.userId)
     //Check if user is logged in
     if (req.session.passport) {
       //Check if user is attempting to view their own cart
@@ -34,7 +33,7 @@ router.get('/:userId', async (req, res, next) => {
         res.status(200).send('Not your cart!')
       }
     } else {
-      console.log('req', req.session)
+      //if not signed in, check that session user id matches the cart being requested
       if (req.session.user.id == req.params.userId) {
         const cart = await Order.findOne({
           where: {
