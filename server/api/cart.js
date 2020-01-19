@@ -4,20 +4,55 @@ module.exports = router
 
 router.get('/:userId', async (req, res, next) => {
   try {
-    const cart = await Order.findOne({
-      where: {
-        userId: req.params.userId,
-        status: 'pending'
+    console.log('req.params', req.params.userId)
+    if (req.session.passport) {
+      if (req.session.passport.user == req.params.userId) {
+        const cart = await Order.findOne({
+          where: {
+            userId: req.params.userId,
+            status: 'pending'
+          }
+        })
+        if (cart) {
+          const orderId = cart.id
+          const productList = await ProductOrder.findAll({
+            where: {
+              orderId: orderId
+            },
+            include: [{model: Product, as: 'product'}]
+          })
+          res.json(productList)
+        } else {
+          res.status(200).send('No items in cart yet!')
+        }
+      } else {
+        res.status(200).send('Not your cart!')
       }
-    })
-    const orderId = cart.id
-    const productList = await ProductOrder.findAll({
-      where: {
-        orderId: orderId
-      },
-      include: [{model: Product, as: 'product'}]
-    })
-    res.json(productList)
+    } else {
+      console.log('req', req.session)
+      if (req.session.user.id == req.params.userId) {
+        const cart = await Order.findOne({
+          where: {
+            userId: req.params.userId,
+            status: 'pending'
+          }
+        })
+        if (cart) {
+          const orderId = cart.id
+          const productList = await ProductOrder.findAll({
+            where: {
+              orderId: orderId
+            },
+            include: [{model: Product, as: 'product'}]
+          })
+          res.json(productList)
+        } else {
+          res.status(200).send('No items in cart yet!')
+        }
+      } else {
+        res.status(200).send('Not your cart!')
+      }
+    }
   } catch (error) {
     next(error)
   }

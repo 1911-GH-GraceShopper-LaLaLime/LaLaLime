@@ -12,55 +12,59 @@ class Cart extends React.Component {
 
   render() {
     console.log('THIS PROPS: ', this.props)
-    let subtotal = this.props.cartItems.reduce(
-      (acc, item) => acc + item.product.price,
-      0
-    )
-    // may need to leave this to tier 2?
-    let subtotalWithTax
+    if (typeof this.props.cartItems == 'object') {
+      let subtotal = this.props.cartItems.reduce(
+        (acc, item) => acc + item.product.price,
+        0
+      )
+      // may need to leave this to tier 2?
+      let subtotalWithTax
 
-    // eslint-disable-next-line no-return-assign
-    return (
-      <div className="cart-page">
-        <div className="cart-list">
-          <h2>Shopping cart</h2>
-          {this.props.cartItems ? (
-            this.props.cartItems.map(item => {
-              return (
-                <CartItem
-                  key={item.productId}
-                  item={item}
-                  userId={this.props.userId}
-                />
-              )
-            })
-          ) : (
-            <div>No items in cart!</div>
-          )}
-        </div>
-        <div className="cart-order-summary">
-          <div className="cart-line-items">
-            <h2>Order Summary</h2>
-            <h4>
-              Subtotal:
-              {/* { 
+      // eslint-disable-next-line no-return-assign
+      return (
+        <div className="cart-page">
+          <div className="cart-list">
+            <h2>Shopping cart</h2>
+            {this.props.cartItems ? (
+              this.props.cartItems.map(item => {
+                return (
+                  <CartItem
+                    key={item.productId}
+                    item={item}
+                    userId={this.props.userId}
+                  />
+                )
+              })
+            ) : (
+              <div>No items in cart!</div>
+            )}
+          </div>
+          <div className="cart-order-summary">
+            <div className="cart-line-items">
+              <h2>Order Summary</h2>
+              <h4>
+                Subtotal:
+                {/* {
                 subtotal = this.props.cartItems.reduce((acc, item) => acc + item.product.price, 0)
               } */}
-              {subtotal}
-            </h4>
-            {/* // perhaps we can consider to include shipping in tier 2?
+                {subtotal}
+              </h4>
+              {/* // perhaps we can consider to include shipping in tier 2?
             <h4>Shipping: </h4> */}
-            <h4>Estimated Tax:</h4>
-            <h2>Subtotal: {subtotal}</h2>
-            <a href={`/cart/${this.props.userId}/checkout`}>
-              <button type="button" className="cart-checkout-btn">
-                Checkout
-              </button>
-            </a>
+              <h4>Estimated Tax:</h4>
+              <h2>Subtotal: {subtotal}</h2>
+              <a href={`/cart/${this.props.userId}/checkout`}>
+                <button type="button" className="cart-checkout-btn">
+                  Checkout
+                </button>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      return <div>{`${this.props.cartItems}`}</div>
+    }
   }
 }
 
